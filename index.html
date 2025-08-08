@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PurpleStake - Fake Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-dice"></i>
+                    <h1>PurpleStake</h1>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3>Casino Games</h3>
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-link active" data-game="blackjack">
+                            <i class="fas fa-spades"></i>
+                            <span>Blackjack</span>
+                        </a></li>
+                        <li><a href="#" class="nav-link" data-game="roulette">
+                            <i class="fas fa-circle"></i>
+                            <span>Roulette</span>
+                        </a></li>
+                        <li><a href="#" class="nav-link" data-game="baccarat">
+                            <i class="fas fa-crown"></i>
+                            <span>Baccarat</span>
+                        </a></li>
+                        <li><a href="#" class="nav-link" data-game="slots">
+                            <i class="fas fa-slot-machine"></i>
+                            <span>Slots</span>
+                        </a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3>Crash Games</h3>
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-link" data-game="mines">
+                            <i class="fas fa-bomb"></i>
+                            <span>Mines</span>
+                        </a></li>
+                        <li><a href="#" class="nav-link" data-game="plinko">
+                            <i class="fas fa-circle-notch"></i>
+                            <span>Plinko</span>
+                        </a></li>
+                        <li><a href="#" class="nav-link" data-game="dice">
+                            <i class="fas fa-dice-d20"></i>
+                            <span>Dice</span>
+                        </a></li>
+                        <li><a href="#" class="nav-link" data-game="limbo">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Limbo</span>
+                        </a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <button class="menu-toggle" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="breadcrumb">
+                        <span id="current-game">Blackjack</span>
+                    </div>
+                </div>
+                
+                <div class="top-bar-right">
+                    <div class="user-info">
+                        <div class="balance-card">
+                            <div class="balance-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="balance-info">
+                                <span class="balance-label">Balance</span>
+                                <span class="balance-amount" id="balance">$5,000.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rewards-card">
+                            <div class="reward-timers">
+                                <div class="reward-timer">
+                                    <div class="timer-header">
+                                        <i class="fas fa-clock"></i>
+                                        <span class="timer-label">10min</span>
+                                    </div>
+                                    <span class="reward-time" id="reward-timer">10:00</span>
+                                    <button class="btn btn-reward" id="claim-reward-btn" disabled>
+                                        <i class="fas fa-gift"></i>
+                                        <span>Claim $100</span>
+                                    </button>
+                                </div>
+                                <div class="reward-timer">
+                                    <div class="timer-header">
+                                        <i class="fas fa-calendar-day"></i>
+                                        <span class="timer-label">Daily</span>
+                                    </div>
+                                    <span class="reward-time" id="daily-timer">24:00:00</span>
+                                    <button class="btn btn-reward" id="claim-daily-btn" disabled>
+                                        <i class="fas fa-gift"></i>
+                                        <span>Claim $1,000</span>
+                                    </button>
+                                </div>
+                                <div class="reward-timer">
+                                    <div class="timer-header">
+                                        <i class="fas fa-calendar-week"></i>
+                                        <span class="timer-label">Weekly</span>
+                                    </div>
+                                    <span class="reward-time" id="weekly-timer">7d 00:00:00</span>
+                                    <button class="btn btn-reward" id="claim-weekly-btn" disabled>
+                                        <i class="fas fa-gift"></i>
+                                        <span>Claim $10,000</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Blackjack Game -->
+        <div class="game-container" id="blackjack-game">
+            <div class="game-layout">
+                <div class="game-main">
+                    <div class="game-table">
+                        <div class="dealer-section">
+                            <div class="section-header">
+                                <i class="fas fa-user-tie"></i>
+                                <span>Dealer</span>
+                                <div class="score-badge" id="dealer-score">0</div>
+                            </div>
+                            <div class="cards-area" id="dealer-cards"></div>
+                        </div>
+                        
+                        <div class="player-section">
+                            <div class="section-header">
+                                <i class="fas fa-user"></i>
+                                <span>Player</span>
+                                <div class="score-badge" id="player-score">0</div>
+                            </div>
+                            <div class="cards-area" id="player-cards"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-sidebar">
+                    <div class="betting-panel">
+                        <div class="panel-header">
+                            <i class="fas fa-coins"></i>
+                            <span>Betting</span>
+                        </div>
+                        <div class="bet-input-group">
+                            <label for="bet-amount">Bet Amount</label>
+                            <div class="input-with-buttons">
+                                <input type="number" id="bet-amount" min="1" max="5000" value="100" step="10">
+                                <div class="quick-buttons">
+                                    <button class="quick-btn" data-amount="10">10</button>
+                                    <button class="quick-btn" data-amount="50">50</button>
+                                    <button class="quick-btn" data-amount="100">100</button>
+                                    <button class="quick-btn" data-amount="500">500</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="deal-btn">
+                                <i class="fas fa-play"></i>
+                                <span>Deal</span>
+                            </button>
+                            <button class="btn btn-secondary" id="hit-btn" disabled>
+                                <i class="fas fa-plus"></i>
+                                <span>Hit</span>
+                            </button>
+                            <button class="btn btn-secondary" id="stand-btn" disabled>
+                                <i class="fas fa-hand-paper"></i>
+                                <span>Stand</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-message" id="blackjack-message"></div>
+        </div>
+
+        <!-- Roulette Game -->
+        <div class="game-container hidden" id="roulette-game">
+            <div class="game-layout">
+                <div class="game-main">
+                    <div class="roulette-table">
+                        <div class="wheel-section">
+                            <div class="wheel-container">
+                                <div class="wheel" id="wheel">
+                                    <div class="wheel-number" data-number="0">0</div>
+                                    <div class="wheel-number" data-number="32">32</div>
+                                    <div class="wheel-number" data-number="15">15</div>
+                                    <div class="wheel-number" data-number="19">19</div>
+                                    <div class="wheel-number" data-number="4">4</div>
+                                    <div class="wheel-number" data-number="21">21</div>
+                                    <div class="wheel-number" data-number="2">2</div>
+                                    <div class="wheel-number" data-number="25">25</div>
+                                    <div class="wheel-number" data-number="17">17</div>
+                                    <div class="wheel-number" data-number="34">34</div>
+                                    <div class="wheel-number" data-number="6">6</div>
+                                    <div class="wheel-number" data-number="27">27</div>
+                                    <div class="wheel-number" data-number="13">13</div>
+                                    <div class="wheel-number" data-number="36">36</div>
+                                    <div class="wheel-number" data-number="11">11</div>
+                                    <div class="wheel-number" data-number="30">30</div>
+                                    <div class="wheel-number" data-number="8">8</div>
+                                    <div class="wheel-number" data-number="23">23</div>
+                                    <div class="wheel-number" data-number="10">10</div>
+                                    <div class="wheel-number" data-number="5">5</div>
+                                    <div class="wheel-number" data-number="24">24</div>
+                                    <div class="wheel-number" data-number="16">16</div>
+                                    <div class="wheel-number" data-number="33">33</div>
+                                    <div class="wheel-number" data-number="1">1</div>
+                                    <div class="wheel-number" data-number="20">20</div>
+                                    <div class="wheel-number" data-number="14">14</div>
+                                    <div class="wheel-number" data-number="31">31</div>
+                                    <div class="wheel-number" data-number="9">9</div>
+                                    <div class="wheel-number" data-number="22">22</div>
+                                    <div class="wheel-number" data-number="18">18</div>
+                                    <div class="wheel-number" data-number="29">29</div>
+                                    <div class="wheel-number" data-number="7">7</div>
+                                    <div class="wheel-number" data-number="28">28</div>
+                                    <div class="wheel-number" data-number="12">12</div>
+                                    <div class="wheel-number" data-number="35">35</div>
+                                    <div class="wheel-number" data-number="3">3</div>
+                                    <div class="wheel-number" data-number="26">26</div>
+                                </div>
+                                <div class="ball" id="ball"></div>
+                            </div>
+                            <div class="last-number">
+                                <span>Last: <span id="last-number">-</span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="betting-board">
+                            <div class="number-grid">
+                                <div class="number" data-number="0">0</div>
+                                <div class="number" data-number="1">1</div>
+                                <div class="number" data-number="2">2</div>
+                                <div class="number" data-number="3">3</div>
+                                <div class="number" data-number="4">4</div>
+                                <div class="number" data-number="5">5</div>
+                                <div class="number" data-number="6">6</div>
+                                <div class="number" data-number="7">7</div>
+                                <div class="number" data-number="8">8</div>
+                                <div class="number" data-number="9">9</div>
+                                <div class="number" data-number="10">10</div>
+                                <div class="number" data-number="11">11</div>
+                                <div class="number" data-number="12">12</div>
+                                <div class="number" data-number="13">13</div>
+                                <div class="number" data-number="14">14</div>
+                                <div class="number" data-number="15">15</div>
+                                <div class="number" data-number="16">16</div>
+                                <div class="number" data-number="17">17</div>
+                                <div class="number" data-number="18">18</div>
+                                <div class="number" data-number="19">19</div>
+                                <div class="number" data-number="20">20</div>
+                                <div class="number" data-number="21">21</div>
+                                <div class="number" data-number="22">22</div>
+                                <div class="number" data-number="23">23</div>
+                                <div class="number" data-number="24">24</div>
+                                <div class="number" data-number="25">25</div>
+                                <div class="number" data-number="26">26</div>
+                                <div class="number" data-number="27">27</div>
+                                <div class="number" data-number="28">28</div>
+                                <div class="number" data-number="29">29</div>
+                                <div class="number" data-number="30">30</div>
+                                <div class="number" data-number="31">31</div>
+                                <div class="number" data-number="32">32</div>
+                                <div class="number" data-number="33">33</div>
+                                <div class="number" data-number="34">34</div>
+                                <div class="number" data-number="35">35</div>
+                                <div class="number" data-number="36">36</div>
+                            </div>
+                            
+                            <div class="outside-bets">
+                                <div class="bet-option" data-bet="red">Red</div>
+                                <div class="bet-option" data-bet="black">Black</div>
+                                <div class="bet-option" data-bet="even">Even</div>
+                                <div class="bet-option" data-bet="odd">Odd</div>
+                                <div class="bet-option" data-bet="1-18">1-18</div>
+                                <div class="bet-option" data-bet="19-36">19-36</div>
+                                <div class="bet-option" data-bet="1st12">1st 12</div>
+                                <div class="bet-option" data-bet="2nd12">2nd 12</div>
+                                <div class="bet-option" data-bet="3rd12">3rd 12</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-sidebar">
+                    <div class="betting-panel">
+                        <div class="panel-header">
+                            <i class="fas fa-coins"></i>
+                            <span>Betting</span>
+                        </div>
+                        <div class="bet-input-group">
+                            <label for="roulette-bet-amount">Bet Amount</label>
+                            <div class="input-with-buttons">
+                                <input type="number" id="roulette-bet-amount" min="1" max="5000" value="100" step="10">
+                                <div class="quick-buttons">
+                                    <button class="quick-btn" data-amount="10">10</button>
+                                    <button class="quick-btn" data-amount="50">50</button>
+                                    <button class="quick-btn" data-amount="100">100</button>
+                                    <button class="quick-btn" data-amount="500">500</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="spin-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Spin</span>
+                            </button>
+                            <button class="btn btn-secondary" id="clear-bets-btn">
+                                <i class="fas fa-trash"></i>
+                                <span>Clear</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-message" id="roulette-message"></div>
+        </div>
+
+        <!-- Mines Game -->
+        <div class="game-container hidden" id="mines-game">
+            <div class="game-header">
+                <h2>Mines</h2>
+                <div class="game-info">
+                    <span>Multiplier: <span id="current-multiplier">1.00x</span></span>
+                    <span>Gems Found: <span id="gems-found">0</span></span>
+                </div>
+            </div>
+
+            <div class="mines-grid">
+                <div class="mines-board" id="mines-board">
+                    <!-- Mines will be generated here -->
+                </div>
+            </div>
+
+            <div class="mines-controls">
+                <div class="mines-settings">
+                    <div class="setting-group">
+                        <label for="mines-bet-amount">Bet Amount:</label>
+                        <input type="number" id="mines-bet-amount" min="1" max="5000" value="100" step="10">
+                    </div>
+                    <div class="setting-group">
+                        <label for="mines-count">Number of Mines:</label>
+                        <select id="mines-count">
+                            <option value="1">1 Mine</option>
+                            <option value="2">2 Mines</option>
+                            <option value="3" selected>3 Mines</option>
+                            <option value="4">4 Mines</option>
+                            <option value="5">5 Mines</option>
+                            <option value="6">6 Mines</option>
+                            <option value="7">7 Mines</option>
+                            <option value="8">8 Mines</option>
+                            <option value="9">9 Mines</option>
+                            <option value="10">10 Mines</option>
+                            <option value="11">11 Mines</option>
+                            <option value="12">12 Mines</option>
+                            <option value="13">13 Mines</option>
+                            <option value="14">14 Mines</option>
+                            <option value="15">15 Mines</option>
+                            <option value="16">16 Mines</option>
+                            <option value="17">17 Mines</option>
+                            <option value="18">18 Mines</option>
+                            <option value="19">19 Mines</option>
+                            <option value="20">20 Mines</option>
+                            <option value="21">21 Mines</option>
+                            <option value="22">22 Mines</option>
+                            <option value="23">23 Mines</option>
+                            <option value="24">24 Mines</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mines-buttons">
+                    <button class="btn btn-primary" id="start-mines-btn">Start Game</button>
+                    <button class="btn btn-success" id="cashout-mines-btn" disabled>Cashout</button>
+                    <button class="btn btn-secondary" id="reset-mines-btn">Reset</button>
+                </div>
+            </div>
+
+            <div class="game-message" id="mines-message"></div>
+        </div>
+
+        <!-- Slots Game -->
+        <div class="game-container hidden" id="slots-game">
+            <div class="game-layout">
+                <div class="game-main">
+                    <div class="slots-table">
+                        <div class="slots-machine">
+                            <div class="slots-reels" id="slots-reels">
+                                <div class="reel" id="reel-1">
+                                    <div class="reel-symbol" data-symbol="7">7</div>
+                                    <div class="reel-symbol" data-symbol="bar">BAR</div>
+                                    <div class="reel-symbol" data-symbol="wild">WILD</div>
+                                    <div class="reel-symbol" data-symbol="double">DOUBLE</div>
+                                    <div class="reel-symbol" data-symbol="7">7</div>
+                                    <div class="reel-symbol" data-symbol="bar">BAR</div>
+                                </div>
+                                <div class="reel" id="reel-2">
+                                    <div class="reel-symbol" data-symbol="7">7</div>
+                                    <div class="reel-symbol" data-symbol="bar">BAR</div>
+                                    <div class="reel-symbol" data-symbol="wild">WILD</div>
+                                    <div class="reel-symbol" data-symbol="double">DOUBLE</div>
+                                    <div class="reel-symbol" data-symbol="7">7</div>
+                                    <div class="reel-symbol" data-symbol="bar">BAR</div>
+                                </div>
+                                <div class="reel" id="reel-3">
+                                    <div class="reel-symbol" data-symbol="7">7</div>
+                                    <div class="reel-symbol" data-symbol="bar">BAR</div>
+                                    <div class="reel-symbol" data-symbol="wild">WILD</div>
+                                    <div class="reel-symbol" data-symbol="double">DOUBLE</div>
+                                    <div class="reel-symbol" data-symbol="7">7</div>
+                                    <div class="reel-symbol" data-symbol="bar">BAR</div>
+                                </div>
+                            </div>
+                            <div class="payline" id="payline"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-sidebar">
+                    <div class="betting-panel">
+                        <div class="panel-header">
+                            <i class="fas fa-slot-machine"></i>
+                            <span>Slots Settings</span>
+                        </div>
+                        <div class="bet-input-group">
+                            <label for="slots-bet-amount">Bet Amount</label>
+                            <div class="input-with-buttons">
+                                <input type="number" id="slots-bet-amount" min="1" max="5000" value="100" step="10">
+                                <div class="quick-buttons">
+                                    <button class="quick-btn" data-amount="10">10</button>
+                                    <button class="quick-btn" data-amount="50">50</button>
+                                    <button class="quick-btn" data-amount="100">100</button>
+                                    <button class="quick-btn" data-amount="500">500</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-info-display">
+                            <div class="info-item">
+                                <span class="info-label">Last Win:</span>
+                                <span class="info-value" id="slots-win">$0.00</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Lines:</span>
+                                <span class="info-value" id="slots-lines">1</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="spin-slots-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Spin</span>
+                            </button>
+                            <button class="btn btn-secondary" id="auto-spin-slots-btn">
+                                <i class="fas fa-play"></i>
+                                <span>Auto Spin</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-message" id="slots-message"></div>
+        </div>
+
+        <!-- Plinko Game -->
+        <div class="game-container hidden" id="plinko-game">
+            <div class="game-header">
+                <h2>Plinko</h2>
+                <div class="game-info">
+                    <span>Multiplier: <span id="plinko-multiplier">1.00x</span></span>
+                    <span>Risk: <span id="plinko-risk">Low</span></span>
+                </div>
+            </div>
+
+            <div class="plinko-board">
+                <div class="plinko-drop-zone">
+                    <div class="plinko-ball" id="plinko-ball"></div>
+                </div>
+                <div class="plinko-pins" id="plinko-pins">
+                    <!-- Pins will be generated here -->
+                </div>
+                <div class="plinko-buckets" id="plinko-buckets">
+                    <!-- Buckets will be generated here -->
+                </div>
+            </div>
+
+            <div class="plinko-controls">
+                <div class="plinko-settings">
+                    <div class="setting-group">
+                        <label for="plinko-bet-amount">Bet Amount:</label>
+                        <input type="number" id="plinko-bet-amount" min="1" max="5000" value="100" step="10">
+                    </div>
+                    <div class="setting-group">
+                        <label for="plinko-risk-level">Risk Level:</label>
+                        <select id="plinko-risk-level">
+                            <option value="low">Low Risk</option>
+                            <option value="medium">Medium Risk</option>
+                            <option value="high">High Risk</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="plinko-buttons">
+                    <button class="btn btn-primary" id="drop-plinko-btn">Drop Ball</button>
+                    <button class="btn btn-secondary" id="reset-plinko-btn">Reset</button>
+                </div>
+            </div>
+
+            <div class="game-message" id="plinko-message"></div>
+        </div>
+
+        <!-- Dice Game -->
+        <div class="game-container hidden" id="dice-game">
+            <div class="game-layout">
+                <div class="game-main">
+                    <div class="dice-table">
+                        <div class="dice-display">
+                            <div class="dice-container">
+                                <div class="dice" id="dice">
+                                    <div class="dice-face">
+                                        <div class="dice-dot"></div>
+                                        <div class="dice-dot"></div>
+                                        <div class="dice-dot"></div>
+                                        <div class="dice-dot"></div>
+                                        <div class="dice-dot"></div>
+                                        <div class="dice-dot"></div>
+                                    </div>
+                                </div>
+                                <div class="dice-result" id="dice-result">Roll the dice!</div>
+                            </div>
+                        </div>
+                        
+                        <div class="dice-settings">
+                            <div class="dice-bet-type">
+                                <button class="bet-type-btn active" data-type="over">Roll Over</button>
+                                <button class="bet-type-btn" data-type="under">Roll Under</button>
+                            </div>
+                            <div class="dice-target">
+                                <label for="dice-target-number">Target Number:</label>
+                                <input type="number" id="dice-target-number" min="1" max="100" value="50">
+                                <span class="dice-target-label">(1-100)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-sidebar">
+                    <div class="betting-panel">
+                        <div class="panel-header">
+                            <i class="fas fa-dice"></i>
+                            <span>Dice Settings</span>
+                        </div>
+                        <div class="bet-input-group">
+                            <label for="dice-bet-amount">Bet Amount</label>
+                            <div class="input-with-buttons">
+                                <input type="number" id="dice-bet-amount" min="1" max="5000" value="100" step="10">
+                                <div class="quick-buttons">
+                                    <button class="quick-btn" data-amount="10">10</button>
+                                    <button class="quick-btn" data-amount="50">50</button>
+                                    <button class="quick-btn" data-amount="100">100</button>
+                                    <button class="quick-btn" data-amount="500">500</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-info-display">
+                            <div class="info-item">
+                                <span class="info-label">Target:</span>
+                                <span class="info-value" id="dice-target">50</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Chance:</span>
+                                <span class="info-value" id="dice-chance">49%</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="roll-dice-btn">
+                                <i class="fas fa-dice"></i>
+                                <span>Roll Dice</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-message" id="dice-message"></div>
+        </div>
+
+        <!-- Limbo Game -->
+        <div class="game-container hidden" id="limbo-game">
+            <div class="game-layout">
+                <div class="game-main">
+                    <div class="limbo-table">
+                        <div class="limbo-display">
+                            <div class="multiplier-display">
+                                <span id="limbo-multiplier">1.00x</span>
+                            </div>
+                            <div class="limbo-bar">
+                                <div class="multiplier-progress" id="limbo-progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-sidebar">
+                    <div class="betting-panel">
+                        <div class="panel-header">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Limbo Settings</span>
+                        </div>
+                        <div class="bet-input-group">
+                            <label for="limbo-bet-amount">Bet Amount</label>
+                            <div class="input-with-buttons">
+                                <input type="number" id="limbo-bet-amount" min="1" max="5000" value="100" step="10">
+                                <div class="quick-buttons">
+                                    <button class="quick-btn" data-amount="10">10</button>
+                                    <button class="quick-btn" data-amount="50">50</button>
+                                    <button class="quick-btn" data-amount="100">100</button>
+                                    <button class="quick-btn" data-amount="500">500</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="target-input-group">
+                            <label for="limbo-target-multiplier">Target Multiplier</label>
+                            <input type="number" id="limbo-target-multiplier" min="1.01" max="1000" value="2.00" step="0.01">
+                        </div>
+                        <div class="game-info-display">
+                            <div class="info-item">
+                                <span class="info-label">Target:</span>
+                                <span class="info-value" id="limbo-target">2.00x</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Chance:</span>
+                                <span class="info-value" id="limbo-chance">49.50%</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="play-limbo-btn">
+                                <i class="fas fa-play"></i>
+                                <span>Play</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-message" id="limbo-message"></div>
+        </div>
+
+        <!-- Speed Baccarat Game -->
+        <div class="game-container hidden" id="baccarat-game">
+            <div class="game-header">
+                <h2>Speed Baccarat</h2>
+                <div class="game-info">
+                    <span>Player: <span id="baccarat-player-score">0</span></span>
+                    <span>Banker: <span id="baccarat-banker-score">0</span></span>
+                </div>
+            </div>
+
+            <div class="baccarat-table">
+                <div class="baccarat-player">
+                    <h3>Player</h3>
+                    <div class="baccarat-cards" id="baccarat-player-cards"></div>
+                </div>
+                <div class="baccarat-banker">
+                    <h3>Banker</h3>
+                    <div class="baccarat-cards" id="baccarat-banker-cards"></div>
+                </div>
+            </div>
+
+            <div class="baccarat-betting">
+                <div class="baccarat-bet-options">
+                    <button class="baccarat-bet-btn" data-bet="player">Player</button>
+                    <button class="baccarat-bet-btn" data-bet="banker">Banker</button>
+                    <button class="baccarat-bet-btn" data-bet="tie">Tie</button>
+                </div>
+                <div class="baccarat-controls">
+                    <div class="setting-group">
+                        <label for="baccarat-bet-amount">Bet Amount:</label>
+                        <input type="number" id="baccarat-bet-amount" min="1" max="5000" value="100" step="10">
+                    </div>
+                    <button class="btn btn-primary" id="deal-baccarat-btn">Deal</button>
+                </div>
+            </div>
+
+            <div class="game-message" id="baccarat-message"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1075,6 +1075,7 @@ class SlotsGame {
 
 // Plinko Game
 class PlinkoGame {
+    class PlinkoGame {
     constructor(gameState) {
         this.gameState = gameState;
         this.isDropping = false;
@@ -1090,19 +1091,14 @@ class PlinkoGame {
     createPins() {
         const pinsContainer = document.getElementById('plinko-pins');
         pinsContainer.innerHTML = '';
-        
-        // Create 16 rows of pins (like in the image)
-        for (let row = 0; row < 16; row++) {
+        for (let row = 0; row < 14; row++) {
             const rowElement = document.createElement('div');
             rowElement.className = 'plinko-row';
-            
-            // Each row has row + 1 pins
             for (let col = 0; col <= row; col++) {
                 const pin = document.createElement('div');
                 pin.className = 'plinko-pin';
                 rowElement.appendChild(pin);
             }
-            
             pinsContainer.appendChild(rowElement);
         }
     }
@@ -1110,11 +1106,8 @@ class PlinkoGame {
     createBuckets() {
         const bucketsContainer = document.getElementById('plinko-buckets');
         bucketsContainer.innerHTML = '';
-        
-        // Multipliers from the image (16 buckets total)
-        const multipliers = [16, 9, 2, 1.4, 1.4, 1.2, 1.1, 1, 0.5, 1, 1.1, 1.2, 1.4, 1.4, 2, 9, 16];
-        
-        multipliers.forEach((multiplier, index) => {
+        const multipliers = [16, 9, 2, 1.4, 1.2, 1.1, 1, 0.5, 1, 1.1, 1.2, 1.4, 2, 9, 16];
+        multipliers.forEach(multiplier => {
             const bucket = document.createElement('div');
             bucket.className = 'plinko-bucket';
             bucket.textContent = `${multiplier}x`;
@@ -1126,35 +1119,15 @@ class PlinkoGame {
     setupEventListeners() {
         document.getElementById('drop-plinko-btn').addEventListener('click', () => this.dropBall());
         document.getElementById('reset-plinko-btn').addEventListener('click', () => this.reset());
-        document.getElementById('plinko-risk-level').addEventListener('change', () => this.updateRisk());
-    }
-
-    updateRisk() {
-        const risk = document.getElementById('plinko-risk-level').value;
-        const multiplierElement = document.getElementById('plinko-multiplier');
-        const riskElement = document.getElementById('plinko-risk');
-        
-        const riskConfigs = {
-            low: { multiplier: '1.00x', risk: 'Low' },
-            medium: { multiplier: '2.50x', risk: 'Medium' },
-            high: { multiplier: '5.00x', risk: 'High' }
-        };
-        
-        const config = riskConfigs[risk];
-        multiplierElement.textContent = config.multiplier;
-        riskElement.textContent = config.risk;
     }
 
     dropBall() {
         if (this.isDropping) return;
-
         const betAmount = parseFloat(document.getElementById('plinko-bet-amount').value);
-        
         if (betAmount > this.gameState.balance) {
             this.showMessage('Insufficient funds!', 'lose');
             return;
         }
-
         if (!this.gameState.removeMoney(betAmount)) {
             this.showMessage('Insufficient funds!', 'lose');
             return;
@@ -1164,99 +1137,37 @@ class PlinkoGame {
         document.getElementById('drop-plinko-btn').disabled = true;
 
         const ball = document.getElementById('plinko-ball');
-        const dropZone = document.querySelector('.plinko-drop-zone');
         const buckets = document.querySelectorAll('.plinko-bucket');
-        
-        // Reset ball position
         ball.style.transition = 'none';
         ball.style.top = '0';
         ball.style.left = '50%';
-        ball.style.transform = 'translateX(-50%)';
-        
-        // Simulate realistic ball path through pins
-        const finalBucket = this.simulateBallPath();
-        const multiplier = parseFloat(buckets[finalBucket].dataset.multiplier);
-        
-        // Animate ball drop with realistic physics
-        this.animateBallDrop(ball, finalBucket, () => {
-            const winnings = betAmount * multiplier;
-            this.gameState.addMoney(winnings);
-            
-            // Highlight winning bucket
-            buckets[finalBucket].classList.add('win');
-            
-            this.showMessage(`Ball landed on ${multiplier}x! You won $${winnings.toFixed(2)}!`, 'win');
-            
+
+        let position = Math.floor(buckets.length / 2);
+        for (let i = 0; i < 14; i++) {
+            position += Math.random() < 0.5 ? -1 : 1;
+            position = Math.max(0, Math.min(buckets.length - 1, position));
+        }
+
+        const targetBucket = buckets[position];
+        const multiplier = parseFloat(targetBucket.dataset.multiplier);
+        const winnings = betAmount * multiplier;
+        this.gameState.addMoney(winnings);
+
+        ball.style.transition = 'top 1s ease, left 1s ease';
+        ball.style.top = '350px';
+        ball.style.left = `${targetBucket.offsetLeft + targetBucket.offsetWidth / 2}px`;
+
+        targetBucket.classList.add('win');
+        this.showMessage(`Ball landed on ${multiplier}x! You won $${winnings.toFixed(2)}!`, 'win');
+
+        setTimeout(() => {
+            targetBucket.classList.remove('win');
+            ball.style.transition = 'none';
+            ball.style.top = '0';
+            ball.style.left = '50%';
             this.isDropping = false;
             document.getElementById('drop-plinko-btn').disabled = false;
-            
-            setTimeout(() => {
-                buckets[finalBucket].classList.remove('win');
-                // Reset ball position
-                ball.style.transition = 'none';
-                ball.style.top = '0';
-                ball.style.left = '50%';
-                ball.style.transform = 'translateX(-50%)';
-            }, 2000);
-        });
-    }
-
-    simulateBallPath() {
-        // Simulate realistic ball bouncing through pins
-        // Each row has a 50/50 chance to go left or right
-        let position = 8; // Start in the middle (8th bucket)
-        
-        for (let row = 0; row < 16; row++) {
-            // Add some randomness to make it more realistic
-            const random = Math.random();
-            if (random < 0.5 && position > 0) {
-                position--;
-            } else if (random >= 0.5 && position < 16) {
-                position++;
-            }
-        }
-        
-        return Math.max(0, Math.min(16, position));
-    }
-
-    animateBallDrop(ball, finalBucket, callback) {
-        const totalTime = 3000; // 3 seconds total
-        const steps = 60; // 60 animation steps
-        const stepTime = totalTime / steps;
-        
-        let currentStep = 0;
-        
-        const animate = () => {
-            if (currentStep >= steps) {
-                callback();
-                return;
-            }
-            
-            const progress = currentStep / steps;
-            const easeProgress = this.easeInOutCubic(progress);
-            
-            // Calculate position based on progress
-            const startX = 50; // Start in center
-            const endX = (finalBucket / 16) * 100; // End at final bucket
-            const currentX = startX + (endX - startX) * easeProgress;
-            
-            // Calculate Y position (accelerating downward)
-            const currentY = progress * 400; // Drop 400px total
-            
-            ball.style.transition = `all ${stepTime}ms linear`;
-            ball.style.top = `${currentY}px`;
-            ball.style.left = `${currentX}%`;
-            ball.style.transform = 'translateX(-50%)';
-            
-            currentStep++;
-            setTimeout(animate, stepTime);
-        };
-        
-        animate();
-    }
-
-    easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }, 2000);
     }
 
     reset() {
@@ -1264,7 +1175,6 @@ class PlinkoGame {
         ball.style.transition = 'none';
         ball.style.top = '0';
         ball.style.left = '50%';
-        
         document.querySelectorAll('.plinko-bucket.win').forEach(bucket => {
             bucket.classList.remove('win');
         });
@@ -1277,138 +1187,6 @@ class PlinkoGame {
     }
 }
 
-// Dice Game
-class DiceGame {
-    constructor(gameState) {
-        this.gameState = gameState;
-        this.betType = 'over';
-        this.setupEventListeners();
-        this.updateChance();
-    }
-
-    setupEventListeners() {
-        document.getElementById('roll-dice-btn').addEventListener('click', () => this.rollDice());
-        document.querySelectorAll('.bet-type-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.betType = e.target.dataset.type;
-                document.querySelectorAll('.bet-type-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                this.updateChance();
-            });
-        });
-        document.getElementById('dice-target-number').addEventListener('input', () => this.updateChance());
-    }
-
-    updateChance() {
-        const target = parseInt(document.getElementById('dice-target-number').value);
-        let chance;
-        
-        if (this.betType === 'over') {
-            chance = ((100 - target) / 100) * 100;
-        } else {
-            chance = (target / 100) * 100;
-        }
-        
-        document.getElementById('dice-chance').textContent = `${chance.toFixed(1)}%`;
-    }
-
-    rollDice() {
-        const betAmount = parseFloat(document.getElementById('dice-bet-amount').value);
-        const target = parseInt(document.getElementById('dice-target-number').value);
-        
-        if (betAmount > this.gameState.balance) {
-            this.showMessage('Insufficient funds!', 'lose');
-            return;
-        }
-
-        if (!this.gameState.removeMoney(betAmount)) {
-            this.showMessage('Insufficient funds!', 'lose');
-            return;
-        }
-
-        const dice = document.getElementById('dice');
-        dice.classList.add('rolling');
-        
-        // Generate random roll (1-100)
-        const roll = Math.floor(Math.random() * 100) + 1;
-        
-        setTimeout(() => {
-            dice.classList.remove('rolling');
-            
-            // Update dice display with proper dots
-            this.updateDiceDisplay(roll);
-            
-            // Determine win
-            let won = false;
-            if (this.betType === 'over' && roll > target) {
-                won = true;
-            } else if (this.betType === 'under' && roll < target) {
-                won = true;
-            }
-            
-            if (won) {
-                const payout = this.calculatePayout(target);
-                const winnings = betAmount * payout;
-                this.gameState.addMoney(winnings);
-                this.showMessage(`You won $${winnings.toFixed(2)}! Roll: ${roll}`, 'win');
-            } else {
-                this.showMessage(`You lost $${betAmount.toFixed(2)}! Roll: ${roll}`, 'lose');
-            }
-        }, 1000);
-    }
-
-    updateDiceDisplay(roll) {
-        const dice = document.getElementById('dice');
-        const diceResult = document.getElementById('dice-result');
-        
-        // Update result text
-        diceResult.textContent = `You rolled: ${roll}`;
-        
-        // Update dice face based on roll (1-6)
-        const diceValue = ((roll - 1) % 6) + 1;
-        const dots = this.getDiceDots(diceValue);
-        
-        const diceFace = dice.querySelector('.dice-face');
-        diceFace.innerHTML = '';
-        
-        dots.forEach(dot => {
-            const dotElement = document.createElement('div');
-            dotElement.className = 'dice-dot';
-            dotElement.style.gridArea = dot;
-            diceFace.appendChild(dotElement);
-        });
-    }
-
-    getDiceDots(value) {
-        const dotPositions = {
-            1: ['2/2'],
-            2: ['1/1', '3/3'],
-            3: ['1/1', '2/2', '3/3'],
-            4: ['1/1', '1/3', '3/1', '3/3'],
-            5: ['1/1', '1/3', '2/2', '3/1', '3/3'],
-            6: ['1/1', '1/2', '1/3', '3/1', '3/2', '3/3']
-        };
-        return dotPositions[value] || [];
-    }
-
-    calculatePayout(target) {
-        let chance;
-        if (this.betType === 'over') {
-            chance = (100 - target) / 100;
-        } else {
-            chance = target / 100;
-        }
-        
-        // Apply house edge
-        return (0.99 / chance);
-    }
-
-    showMessage(message, type) {
-        const messageElement = document.getElementById('dice-message');
-        messageElement.textContent = message;
-        messageElement.className = `game-message ${type}`;
-    }
-}
 
 // Limbo Game
 class LimboGame {

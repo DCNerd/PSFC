@@ -921,7 +921,7 @@ class SlotsGame {
         this.gameState = gameState;
         this.symbols = ['7', 'bar', 'wild', 'double'];
         this.payouts = {
-            '7': 100, 'bar': 50, 'wild': 200, 'double': 150
+            '7': 777, 'bar': 100, 'wild': 200, 'double': 150
         };
         this.isSpinning = false;
         this.setupEventListeners();
@@ -1703,3 +1703,4 @@ class BaccaratGame {
 document.addEventListener('DOMContentLoaded', () => {
     window.gameState = new GameState();
 });
+
